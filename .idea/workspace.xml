@@ -15,7 +15,11 @@
     <leaf>
       <file leaf-file-name="tester.txt" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/tester.txt">
-          <provider selected="true" editor-type-id="text-editor" />
+          <provider selected="true" editor-type-id="text-editor">
+            <state>
+              <caret column="1" selection-start-column="1" selection-end-column="1" />
+            </state>
+          </provider>
         </entry>
       </file>
     </leaf>
@@ -28,6 +32,7 @@
       <list>
         <option value="$PROJECT_DIR$/ReadMe.md" />
         <option value="$PROJECT_DIR$/index.txt" />
+        <option value="$PROJECT_DIR$/tester.txt" />
       </list>
     </option>
   </component>
@@ -140,7 +145,11 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/tester.txt">
-      <provider selected="true" editor-type-id="text-editor" />
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret column="1" selection-start-column="1" selection-end-column="1" />
+        </state>
+      </provider>
     </entry>
   </component>
 </project>
