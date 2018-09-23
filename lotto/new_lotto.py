@@ -1,6 +1,6 @@
 # new_lotto.py
 
-import random
+import random, string
 
 
 class Lotto:
@@ -20,20 +20,22 @@ class Lotto:
             print("{}. {}".format(count, i))
             count += 1
 
-        try:
-            choice = int(input("메뉴 입력: "))
-            while (choice > 0) and (choice < 5):
-                if choice == 1:
-                    self.buy_lotto()
-                elif choice == 2:
-                    self.chk_lotto()
-                elif choice == 3:
-                    self.next_lotto()
-                elif choice == 4:
-                    print("잘가요~")
-                    break
-        except:
-            print("1에서 4까지의 숫자를 입력하세요.")
+        choice = input("메뉴 입력: ")
+
+        while self.is_digit(choice):
+
+            if choice == "1":
+                self.buy_lotto()
+            elif choice == "2":
+                self.chk_lotto()
+            elif choice == "3":
+                self.next_lotto()
+            elif choice == "4":
+                print("잘가요~")
+                return False
+            else:
+                print("1에서 4까지의 숫자를 입력하세요.")
+                choice = input("메뉴 입력: ")
 
     def buy_lotto(self):
         print("게임 수를 입력하세요. 최대 20번까지 가능")
@@ -80,6 +82,12 @@ class Lotto:
     def next_lotto(self):
         pass
 
+    def is_digit(self, str):
+        try:
+            str.isdigit()
+        except ValueError:
+            return False
+        return True
 
 user_money = 1000000
 a = Lotto(user_money)
