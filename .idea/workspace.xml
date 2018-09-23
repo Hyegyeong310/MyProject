@@ -23,6 +23,7 @@
     <leaf>
       <file leaf-file-name="tester.txt" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/tester.txt">
+<<<<<<< HEAD
           <provider selected="true" editor-type-id="text-editor">
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -43,6 +44,9 @@
 >>>>>>> parent of 5c56611... B 추가
             </state>
           </provider>
+=======
+          <provider selected="true" editor-type-id="text-editor" />
+>>>>>>> parent of 8c46e4f... test. A추가
         </entry>
       </file>
     </leaf>
@@ -55,7 +59,6 @@
       <list>
         <option value="$PROJECT_DIR$/ReadMe.md" />
         <option value="$PROJECT_DIR$/index.txt" />
-        <option value="$PROJECT_DIR$/tester.txt" />
       </list>
     </option>
   </component>
@@ -168,6 +171,7 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/tester.txt">
+<<<<<<< HEAD
       <provider selected="true" editor-type-id="text-editor">
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -223,6 +227,9 @@
 >>>>>>> parent of 5c56611... B 추가
         </state>
       </provider>
+=======
+      <provider selected="true" editor-type-id="text-editor" />
+>>>>>>> parent of 8c46e4f... test. A추가
     </entry>
   </component>
 </project>
