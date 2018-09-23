@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="4e6af868-c0da-42b2-bd18-2770ae93a1fa" name="Default" comment="">
-      <change afterPath="$PROJECT_DIR$/tester.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tester.txt" beforeDir="false" afterPath="$PROJECT_DIR$/tester.txt" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -16,8 +16,8 @@
       <file leaf-file-name="tester.txt" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/tester.txt">
           <provider selected="true" editor-type-id="text-editor">
-            <state>
-              <caret column="1" selection-start-column="1" selection-end-column="1" />
+            <state relative-caret-position="22">
+              <caret line="1" column="1" selection-start-line="1" selection-start-column="1" selection-end-line="1" selection-end-column="1" />
             </state>
           </provider>
         </entry>
@@ -146,8 +146,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/tester.txt">
       <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret column="1" selection-start-column="1" selection-end-column="1" />
+        <state relative-caret-position="22">
+          <caret line="1" column="1" selection-start-line="1" selection-start-column="1" selection-end-line="1" selection-end-column="1" />
         </state>
       </provider>
     </entry>
