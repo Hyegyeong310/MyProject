@@ -1,69 +1,59 @@
 # new_lotto.py
 
-import random, string
+import random
 
-class Lotto(object):
+
+class Lotto:
+
     def __init__(self, money):
         self.money = money
         self.menu = ['로또구매', '당첨확인', '회차넘기기', '종료']
 
     def main_menu(self):
-        check = "y"
+
+        print("="*25)
+        print("로또 프로그램")
+        print("="*25)
+
         count = 1
+        for i in self.menu:
+            print("{}. {}".format(count, i))
+            count += 1
 
-        while check == "y":
-
-            print("="*25)
-            print("로또 프로그램")
-            print("="*25)
-
-            for i in self.menu:
-                print("%d. %s" % (count, i))
-                count += 1
-
-            choice = input("메뉴 입력: ")
-            if(choice.isdigit() == True):
-                if choice == "1":
+        try:
+            choice = int(input("메뉴 입력: "))
+            while (choice > 0) and (choice < 5):
+                if choice == 1:
                     self.buy_lotto()
-                elif choice == "2":
+                elif choice == 2:
                     self.chk_lotto()
-                elif choice == "3":
+                elif choice == 3:
                     self.next_lotto()
-                elif choice == "4":
+                elif choice == 4:
                     print("잘가요~")
-                    check = "n"
-                else:
-                    pass
-            else:
-                print("1에서 4까지의 숫자를 입력하세요.")
-                continue
+                    break
+        except:
+            print("1에서 4까지의 숫자를 입력하세요.")
 
     def buy_lotto(self):
-        check = "y"
+        print("게임 수를 입력하세요. 최대 20번까지 가능")
 
-        print("게임 수를 입력하세요.")
-        while check == "y":
-            num = input("게임 수: ")
-            if(num.isdigit() == True):
-
+        try:
+            num = int(input("게임 수: "))
+            if (num > 0) and (num < 21):
                 print("종류를 선택하세요.")
                 choice = input("1. 자동\t2. 수동\t3. 뒤로가기: ")
-                if(choice.isdigit() == True):
 
-                    if choice == "1":
-                        self.buy_auto(int(num))
-                        check = "n"
-                    elif choice == "2":
-                        self.buy_manual(int(num))
-                        check = "n"
-                    else:
-                        self.main_menu()
+                if choice == "1":
+                    self.buy_auto(num)
+                elif choice == "2":
+                    self.buy_manual(num)
                 else:
-                    print("숫자를 입력하세요.")
-                    continue
+                    self.main_menu()
             else:
-                print("숫자를 입력하세요.")
-                continue
+                print("최대 20번까지 가능합니다.")
+        except:
+            print("숫자만 입력하세요.")
 
     def buy_auto(self, num):
 
@@ -78,7 +68,7 @@ class Lotto(object):
             manual_lotto = []
             for j in range(6):
                 user_num = int(input("1~45 사이의 숫자를 입력하세요: "))
-                if (user_num > 0 and user_num < 46):
+                if (user_num > 0) and (user_num < 46):
                     manual_lotto.append(user_num)
                 else:
                     print("1~45 사이의 숫자만 입력해주세요.")
