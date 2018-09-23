@@ -3,10 +3,14 @@
   <component name="ChangeListManager">
     <list default="true" id="4e6af868-c0da-42b2-bd18-2770ae93a1fa" name="Default" comment="">
 <<<<<<< HEAD
+<<<<<<< HEAD
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
 =======
       <change beforePath="$PROJECT_DIR$/tester.txt" beforeDir="false" afterPath="$PROJECT_DIR$/tester.txt" afterDir="false" />
 >>>>>>> parent of b7458e1... C 추가
+=======
+      <change afterPath="$PROJECT_DIR$/tester.txt" afterDir="false" />
+>>>>>>> parent of 5c56611... B 추가
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -22,6 +26,7 @@
           <provider selected="true" editor-type-id="text-editor">
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
             <state relative-caret-position="66">
               <caret line="3" column="1" lean-forward="true" selection-start-line="3" selection-start-column="1" selection-end-line="3" selection-end-column="1" />
 =======
@@ -32,6 +37,10 @@
             <state relative-caret-position="22">
               <caret line="1" column="1" selection-start-line="1" selection-start-column="1" selection-end-line="1" selection-end-column="1" />
 >>>>>>> parent of b7458e1... C 추가
+=======
+            <state>
+              <caret column="1" selection-start-column="1" selection-end-column="1" />
+>>>>>>> parent of 5c56611... B 추가
             </state>
           </provider>
         </entry>
@@ -162,6 +171,7 @@
       <provider selected="true" editor-type-id="text-editor">
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
         <state relative-caret-position="88">
           <caret line="4" column="1" selection-start-line="4" selection-start-column="1" selection-end-line="4" selection-end-column="1" />
         </state>
@@ -207,6 +217,10 @@
         <state relative-caret-position="22">
           <caret line="1" column="1" selection-start-line="1" selection-start-column="1" selection-end-line="1" selection-end-column="1" />
 >>>>>>> parent of b7458e1... C 추가
+=======
+        <state>
+          <caret column="1" selection-start-column="1" selection-end-column="1" />
+>>>>>>> parent of 5c56611... B 추가
         </state>
       </provider>
     </entry>
