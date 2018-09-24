@@ -103,18 +103,20 @@ class Lotto:
 
         for i in range(0, num):
             manual_lotto = []
-            for j in range(6):
-                user_num = int(input("1~45 사이의 숫자를 입력하세요: "))
-                if (user_num > 0) and (user_num < 46):
-
-                    if len(set(manual_lotto)) != j:
-                        print("중복 숫자가 있습니다. 다시 입력해주세요.")
+            for j in range(1, 7):
+                while True:
+                    print('{}번째 숫자를 입력: '.format(j), end='')
+                    num = input()
+                    num = self.values_input(num)
+                    if num not in range(1, 46):
+                        print('1~45 사이 숫자만 입력하세요.')
                         continue
-                    else:
-                        manual_lotto.append(user_num)
-                else:
-                    print("1~45 사이의 숫자만 입력해주세요.")
-                    continue
+                    if num in manual_lotto:
+                        x = manual_lotto.index(num) + 1
+                        print("{}번째 숫자랑 중복입니다.".format(x))
+                        continue
+                    manual_lotto.append(num)
+                    break
 
             print("{}번째 {}".format(i + 1, manual_lotto))
             self.user_lottos[self.l_index] = manual_lotto
@@ -123,7 +125,6 @@ class Lotto:
     # 당첨 확인
     def chk_lotto(self):
         pass
-
 
     # 회차 넘기기
     def next_lotto(self):
