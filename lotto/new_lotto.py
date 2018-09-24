@@ -124,6 +124,7 @@ class Lotto:
     def chk_lotto(self):
         pass
 
+
     # 회차 넘기기
     def next_lotto(self):
         pass
