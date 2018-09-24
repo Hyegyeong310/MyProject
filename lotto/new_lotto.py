@@ -1,14 +1,18 @@
 # new_lotto.py
 
-import random, string
+import random
 
 
 class Lotto:
 
+    # 초기화
     def __init__(self, money):
         self.money = money
         self.menu = ['로또구매', '당첨확인', '회차넘기기', '종료']
+        self.user_lottos = {}
+        self.l_index = 0
 
+    # 메인 메뉴
     def main_menu(self):
 
         print("="*25)
@@ -33,37 +37,68 @@ class Lotto:
             elif i == 4:
                 print("잘가요~")
         else:
-            input("1~4 사이의 숫자만 입력해주세요\n다시 시작:")
+            input("1~4 사이의 숫자만 입력해주세요\n다시 시작 enter:")
             self.main_menu()
 
+    # 로또 게임수
     def buy_lotto(self):
         print("게임 수를 입력하세요. 최대 20번까지 가능")
 
-        num = input("게임 수: ")
-        i = self.values_input(num)
+        times = input("게임 수: ")
+        i = self.values_input(times)
         if 0 < i < 21:
-            print("종류를 선택하세요.")
-            choice = input("1. 자동\t2. 수동\t3. 뒤로가기: ")
-            j = self.values_input(choice)
-            if j == 1:
-                self.buy_auto(j)
-                self.left_money(j*5000)
-            elif j == 2:
-                self.buy_manual(j)
-                self.left_money(j*5000)
-            else:
-                return self.main_menu()
+            self.lotto_kinds(i)
+
         else:
-            input("최대 20번까지 가능합니다\n다시 시작:")
+            input("최대 20번까지 가능합니다\n다시 시작 enter:")
             self.buy_lotto()
 
+    # 로또 종류 선택(자동, 수동)
+    def lotto_kinds(self, times):
+
+        print("종류를 선택하세요.")
+        choice = input("1. 자동\t2. 수동\t3. 뒤로가기: ")
+        j = self.values_input(choice)
+        if 0 < j < 4:
+            if j == 1:
+                self.buy_auto(times)
+                self.left_money(times * 5000)
+            elif j == 2:
+                self.buy_manual(times)
+                self.left_money(times * 5000)
+            else:
+                return self.main_menu()
+
+            a = input("다시 하시겠습니까?\n1. 네     2. 아니오")
+            self.re_buy(a)
+        else:
+            input("1~3사이의 숫자만 입력하세요\n다시 시작 enter:")
+            return self.lotto_kinds(times)
+
+    # 로또 다시 구매
+    def re_buy(self, ans):
+
+        a2 = self.values_input(ans)
+        if 0 < a2 < 3:
+            if a2 == 1:
+                self.buy_lotto()
+            else:
+                self.main_menu()
+        else:
+            print('1또는 2만 입력해주세요.')
+            return self.re_buy()
+
+    # 자동 구매
     def buy_auto(self, num):
 
         for i in range(0, num):
             lotto = random.sample(range(1, 46), 6)
             lotto.sort()
-            print(lotto)
+            print("{}번째 {}".format(i+1, lotto))
+            self.user_lottos[self.l_index] = lotto
+            self.l_index += 1
 
+    # 수동 구매
     def buy_manual(self, num):
 
         for i in range(0, num):
@@ -71,29 +106,46 @@ class Lotto:
             for j in range(6):
                 user_num = int(input("1~45 사이의 숫자를 입력하세요: "))
                 if (user_num > 0) and (user_num < 46):
-                    manual_lotto.append(user_num)
+
+                    if len(set(manual_lotto)) != j:
+                        print("중복 숫자가 있습니다. 다시 입력해주세요.")
+                        continue
+                    else:
+                        manual_lotto.append(user_num)
                 else:
                     print("1~45 사이의 숫자만 입력해주세요.")
                     continue
 
+            print("{}번째 {}".format(i + 1, manual_lotto))
+            self.user_lottos[self.l_index] = manual_lotto
+            self.l_index += 1
+
+
+    # 당첨 확인
     def chk_lotto(self):
         pass
 
+    # 회차 넘기기
     def next_lotto(self):
         pass
 
+    # 남은 자금
     def left_money(self, newMoney):
         self.money = self.money-newMoney
         print("남은 돈: {}".format(self.money))
 
+    # input 값 숫자 체크
     def values_input(self, str):
         while True:
             try:
-                return int(str)
+                num = int(str)
+                return num
             except:
                 str = input("숫자만 입력하세요: ")
                 continue
 
+# 초기 자본금
 user_money = 1000000
+
 a = Lotto(user_money)
 a.main_menu()
