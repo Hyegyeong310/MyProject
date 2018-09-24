@@ -20,42 +20,44 @@ class Lotto:
             print("{}. {}".format(count, i))
             count += 1
 
-        choice = input("메뉴 입력: ")
 
-        while self.is_digit(choice):
+        while True:
+            choice = input("메뉴 입력: ")
+            choice = self.is_int(choice)
 
-            if choice == "1":
+            if choice == 1:
                 self.buy_lotto()
-            elif choice == "2":
+            elif choice == 2:
                 self.chk_lotto()
-            elif choice == "3":
+            elif choice == 3:
                 self.next_lotto()
-            elif choice == "4":
+            elif choice == 4:
                 print("잘가요~")
-                return False
+                break
             else:
-                print("1에서 4까지의 숫자를 입력하세요.")
-                choice = input("메뉴 입력: ")
+                pass
 
     def buy_lotto(self):
         print("게임 수를 입력하세요. 최대 20번까지 가능")
 
-        try:
-            num = int(input("게임 수: "))
+        num = input("게임 수: ")
+        while self.is_int(num):
+            num = int(num)
             if (num > 0) and (num < 21):
                 print("종류를 선택하세요.")
                 choice = input("1. 자동\t2. 수동\t3. 뒤로가기: ")
 
                 if choice == "1":
                     self.buy_auto(num)
+                    self.left_money(num*5000)
                 elif choice == "2":
                     self.buy_manual(num)
+                    self.left_money(num*5000)
                 else:
                     self.main_menu()
+                    break
             else:
                 print("최대 20번까지 가능합니다.")
-        except:
-            print("숫자만 입력하세요.")
 
     def buy_auto(self, num):
 
@@ -82,12 +84,16 @@ class Lotto:
     def next_lotto(self):
         pass
 
-    def is_digit(self, str):
+    def left_money(self, newMoney):
+        self.money = self.money-newMoney
+        print("남은 돈: {}".format(self.money))
+
+    def is_int(self, num):
         try:
-            str.isdigit()
-        except ValueError:
-            return False
-        return True
+            num = int(num)
+            return num
+        except:
+            print("숫자만 입력하세요.")
 
 user_money = 1000000
 a = Lotto(user_money)
