@@ -20,44 +20,42 @@ class Lotto:
             print("{}. {}".format(count, i))
             count += 1
 
+        choice = input("메뉴 입력: ")
+        i = self.values_input(choice)
 
-        while True:
-            choice = input("메뉴 입력: ")
-            choice = self.is_int(choice)
-
-            if choice == 1:
+        if 0 < i < 5:
+            if i == 1:
                 self.buy_lotto()
-            elif choice == 2:
+            elif i == 2:
                 self.chk_lotto()
-            elif choice == 3:
+            elif i == 3:
                 self.next_lotto()
-            elif choice == 4:
+            elif i == 4:
                 print("잘가요~")
-                break
-            else:
-                pass
+        else:
+            input("1~4 사이의 숫자만 입력해주세요\n다시 시작:")
+            self.main_menu()
 
     def buy_lotto(self):
         print("게임 수를 입력하세요. 최대 20번까지 가능")
 
         num = input("게임 수: ")
-        while self.is_int(num):
-            num = int(num)
-            if (num > 0) and (num < 21):
-                print("종류를 선택하세요.")
-                choice = input("1. 자동\t2. 수동\t3. 뒤로가기: ")
-
-                if choice == "1":
-                    self.buy_auto(num)
-                    self.left_money(num*5000)
-                elif choice == "2":
-                    self.buy_manual(num)
-                    self.left_money(num*5000)
-                else:
-                    self.main_menu()
-                    break
+        i = self.values_input(num)
+        if 0 < i < 21:
+            print("종류를 선택하세요.")
+            choice = input("1. 자동\t2. 수동\t3. 뒤로가기: ")
+            j = self.values_input(choice)
+            if j == 1:
+                self.buy_auto(j)
+                self.left_money(j*5000)
+            elif j == 2:
+                self.buy_manual(j)
+                self.left_money(j*5000)
             else:
-                print("최대 20번까지 가능합니다.")
+                return self.main_menu()
+        else:
+            input("최대 20번까지 가능합니다\n다시 시작:")
+            self.buy_lotto()
 
     def buy_auto(self, num):
 
@@ -88,12 +86,13 @@ class Lotto:
         self.money = self.money-newMoney
         print("남은 돈: {}".format(self.money))
 
-    def is_int(self, num):
-        try:
-            num = int(num)
-            return num
-        except:
-            print("숫자만 입력하세요.")
+    def values_input(self, str):
+        while True:
+            try:
+                return int(str)
+            except:
+                str = input("숫자만 입력하세요: ")
+                continue
 
 user_money = 1000000
 a = Lotto(user_money)
