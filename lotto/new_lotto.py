@@ -120,7 +120,6 @@ class Lotto:
             self.user_lottos[self.l_index] = manual_lotto
             self.l_index += 1
 
-
     # 당첨 확인
     def chk_lotto(self):
         pass
