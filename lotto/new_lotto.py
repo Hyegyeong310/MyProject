@@ -10,7 +10,8 @@ class Lotto:
         self.money = money
         self.menu = ['로또구매', '당첨확인', '회차넘기기', '종료']
         self.user_lottos = {}
-        self.l_index = 0
+        self.l_index = 1
+        self.win_nums = []
 
     # 메인 메뉴
     def main_menu(self):
@@ -116,6 +117,7 @@ class Lotto:
                         print("{}번째 숫자랑 중복입니다.".format(x))
                         continue
                     manual_lotto.append(num)
+                    manual_lotto.sort()
                     break
 
             print("{}번째 {}".format(i + 1, manual_lotto))
@@ -124,11 +126,68 @@ class Lotto:
 
     # 당첨 확인
     def chk_lotto(self):
-        pass
+        if len(self.win_nums) == 0:
+            self.win_lotto()
+
+        # 구매한 로또
+        if len(self.user_lottos) == 0:
+            input("현재 구매한 로또가 없습니다 enter ->")
+            return self.main_menu()
+        else:
+            print("현재 구매한 로또는 {}장 있습니다.".format(len(self.user_lottos)))
+            print("이번 주 로또 번호: {}, 보너스: {}".format(self.win_nums[0], self.win_nums[-1]))
+            for i, val in self.user_lottos.items():
+                self.count_win(val)
+
+            print("모두 확인했습니다.\n1. 다시확인   2. 메인으로")
+            a = input()
+            a2 = self.values_input(a)
+            while True:
+                if 0 < a2 < 3:
+                    if a2 == 1:
+                        return self.chk_lotto()
+                    else:
+                        return self.main_menu()
+                else:
+                    print("1 또는 2만 입력")
+                    continue
+
+    # 당첨번호 추출
+    def win_lotto(self):
+        win_num = random.sample(range(1, 46), 6)
+        win_num.sort()
+        self.win_nums.append(win_num)
+        while True:
+            b_num = random.randint(1, 46)
+            if b_num not in self.win_nums:
+                self.win_nums.append(b_num)
+                break
+            else:
+                b_num = random.randint(1, 46)
+
+    # 일치숫자 확인
+    def count_win(self, lst):
+        match_num = []
+        for x in self.win_nums[0]:
+            if x in lst:
+                match_num.append(x)
+
+        print("내 로또: {}".format(lst))
+        print("{}개 일치\n일치한 번호: {}".format(len(match_num), match_num))
+        input("다음 로또 확인 enter ->")
 
     # 회차 넘기기
     def next_lotto(self):
-        pass
+        print("다음 회차로 넘기겠습니까?\n1. 네  2. 아니오")
+        a = input()
+        a2 = self.values_input(a)
+        if 0 < a2 < 3:
+            if a2 == 1:
+                self.win_nums = []
+                self.user_lottos = {}
+        else:
+            print("1 또는 2로 답해주세요.")
+            return self.next_lotto()
 
     # 남은 자금
     def left_money(self, newMoney):
