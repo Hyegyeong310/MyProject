@@ -12,6 +12,7 @@ class Lotto:
         self.user_lottos = {}
         self.l_index = 1
         self.win_nums = []
+        self.receipt_lotto = []
 
     # 메인 메뉴
     def main_menu(self):
@@ -39,20 +40,24 @@ class Lotto:
                 print("잘가요~")
         else:
             input("1~4 사이의 숫자만 입력해주세요\n다시 시작 enter:")
-            self.main_menu()
+            return self.main_menu()
 
     # 로또 게임수
     def buy_lotto(self):
-        print("게임 수를 입력하세요. 최대 20번까지 가능")
-
-        times = input("게임 수: ")
-        i = self.values_input(times)
-        if 0 < i < 21:
-            self.lotto_kinds(i)
-
+        if len(self.user_lottos) >= 60:
+            input("30만원 이상 구매하실 수 없습니다.")
+            return self. main_menu()
         else:
-            input("최대 20번까지 가능합니다\n다시 시작 enter:")
-            self.buy_lotto()
+            print("게임 수를 입력하세요. 최대 20번까지 가능")
+
+            times = input("게임 수: ")
+            i = self.values_input(times)
+            if 0 < i < 21:
+                self.lotto_kinds(i)
+
+            else:
+                input("최대 20번까지 가능합니다\n다시 시작 enter:")
+                self.buy_lotto()
 
     # 로또 종류 선택(자동, 수동)
     def lotto_kinds(self, times):
@@ -63,10 +68,10 @@ class Lotto:
         if 0 < j < 4:
             if j == 1:
                 self.buy_auto(times)
-                self.left_money(times * 5000)
+                self.left_money(times * 5000, False)
             elif j == 2:
                 self.buy_manual(times)
-                self.left_money(times * 5000)
+                self.left_money(times * 5000, False)
             else:
                 return self.main_menu()
 
@@ -86,8 +91,8 @@ class Lotto:
             else:
                 self.main_menu()
         else:
-            print('1또는 2만 입력해주세요.')
-            return self.re_buy()
+            ans = input('1또는 2만 입력해주세요: ')
+            return self.re_buy(ans)
 
     # 자동 구매
     def buy_auto(self, num):
@@ -135,9 +140,10 @@ class Lotto:
             return self.main_menu()
         else:
             print("현재 구매한 로또는 {}장 있습니다.".format(len(self.user_lottos)))
-            print("이번 주 로또 번호: {}, 보너스: {}".format(self.win_nums[0], self.win_nums[-1]))
+            print("이번 주 로또 번호: {}, 보너스: {}".format(self.win_nums[0], self.win_nums[1]))
             for i, val in self.user_lottos.items():
-                self.count_win(val)
+                self.count_win(i, val)
+                self.receipt_lotto.append(i)
 
             print("모두 확인했습니다.\n1. 다시확인   2. 메인으로")
             a = input()
@@ -166,15 +172,61 @@ class Lotto:
                 b_num = random.randint(1, 46)
 
     # 일치숫자 확인
-    def count_win(self, lst):
+    def count_win(self, i_lst, lst):
         match_num = []
+        i = False
         for x in self.win_nums[0]:
             if x in lst:
                 match_num.append(x)
+        if len(match_num) == 5 and self.win_nums[1] in lst:
+            i = True
 
         print("내 로또: {}".format(lst))
-        print("{}개 일치\n일치한 번호: {}".format(len(match_num), match_num))
+        if i:
+            print("{}개 일치: {} + Bonus [{}]".format(len(match_num), match_num, self.win_nums[1]))
+        else:
+            print("{}개 일치: {}".format(len(match_num), match_num))
+
+        self.chk_rank(i_lst, match_num, i)
         input("다음 로또 확인 enter ->")
+
+    # 등수 체크
+    def chk_rank(self, i_lst, lst, is_b):
+        len_lst = len(lst)
+        ranks = [1658710563, 62592852, 1475065, 50000, 5000, 0]
+        i = 0
+
+        if len_lst == 6:
+            print("축하합니다 1등 당첨!")
+            print("당첨금: {}".format(ranks[0]))
+        elif len_lst == 5:
+            if is_b:
+                print("축하합니다 2등 당첨!")
+                print("당첨금: {}".format(ranks[1]))
+                i += 1
+            else:
+                print("축하합니다 3등 당첨!")
+                print("당첨금: {}".format(ranks[2]))
+                i += 2
+        elif len_lst == 4:
+            print("축하합니다 4등 당첨!")
+            print("당첨금: {}".format(ranks[3]))
+            i += 3
+        elif len_lst == 3:
+            print("축하합니다 5등 당첨!")
+            print("당첨금: {}".format(ranks[4]))
+            i += 4
+        else:
+            print("아쉽네요~")
+            print("당첨금: 0")
+            i += 5
+
+        if i_lst in self.receipt_lotto:
+            print("확인한 로또입니다.")
+            print(self.money)
+        else:
+            self.left_money(ranks[i], True)
+
 
     # 회차 넘기기
     def next_lotto(self):
@@ -185,13 +237,18 @@ class Lotto:
             if a2 == 1:
                 self.win_nums = []
                 self.user_lottos = {}
+                input("회차 넘김 완료")
+            return self.main_menu()
         else:
             print("1 또는 2로 답해주세요.")
             return self.next_lotto()
 
     # 남은 자금
-    def left_money(self, newMoney):
-        self.money = self.money-newMoney
+    def left_money(self, newMoney, is_win):
+        if is_win:
+            self.money = self.money+newMoney
+        else:
+            self.money = self.money-newMoney
         print("남은 돈: {}".format(self.money))
 
     # input 값 숫자 체크
@@ -202,7 +259,7 @@ class Lotto:
                 return num
             except:
                 str = input("숫자만 입력하세요: ")
-                continue
+                return self.values_input(str)
 
 # 초기 자본금
 user_money = 1000000
