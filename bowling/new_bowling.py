@@ -17,7 +17,11 @@ class Bowing(object):
                     pin = random.randint(0, 10)
                 else:
                     pin = random.randint(0, (10-pins[0]))
+
+                input("굴린다아아아~~~~~")
+                print("{}회차 {}번째: {}".format((i+1), (j+1), pin))
                 pins.append(pin)
+
             self.roll(pins)
 
     def roll(self, pins):
