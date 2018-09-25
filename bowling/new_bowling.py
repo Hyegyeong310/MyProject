@@ -7,6 +7,7 @@ class Bowing(object):
 
     def __init__(self):
         self.rolls = []
+        self.scores = []
 
     def pin_maker(self):
         for i in range(10):
@@ -26,7 +27,6 @@ class Bowing(object):
         self.pin_maker()
         score = 0
         roll_index = 0
-        print(self.rolls)
         for frame in range(10):
             if self.is_strike(roll_index):
                 if frame == 9:
@@ -41,8 +41,9 @@ class Bowing(object):
             else:
                 score += self.rolls[roll_index][0] + self.rolls[roll_index][1]
             roll_index += 1
+            self.scores.append(score)
 
-        self.show_score(score)
+        self.show_score()
 
     def is_strike(self, roll_index):
         return self.rolls[roll_index][0] == 10
@@ -50,8 +51,36 @@ class Bowing(object):
     def is_spare(self, roll_index):
         return self.rolls[roll_index][0] + self.rolls[roll_index][1] == 10
 
-    def show_score(self, score):
-        pass
+    def show_score(self):
+        for l in range(10):
+            print("*"*10, end="\t")
+        print("")
+
+        for m in range(10):
+            print("{:^10}".format(m+1), end="\t")
+        print("")
+
+        for n in range(10):
+            print("*"*10, end="\t")
+        print("")
+
+        for i in self.rolls:
+            if i[0] == 10:
+                i[0] = "X"
+                i[1] = "-"
+            elif i[1] == (10-i[0]):
+                i[1] = "/"
+            elif i[0] == 0:
+                i[0] = "-"
+            elif i[1] == 0:
+                i[1] = "-"
+
+            print("{:^5}|{:^4}".format(i[0], i[1]), end="\t")
+        print("\n")
+
+        for j in self.scores:
+            print("{:^10}".format(j), end="\t")
+        print("")
 
 a = Bowing()
 a.total_score()
