@@ -6,9 +6,38 @@ import random
 class Lotto(object):
     def __init__(self, money):
         self.money = money
+        self.menu = ["로또구매", "당첨확인", "회차넘김", "집으로"]
+        self.place = None
 
     def menu(self):
-        pass
+        for i in self.menu:
+            print("{}. {}".format(self.menu.index(i)+1, i), end="\t")
+        print("")
+        choice = input("입력: ")
+        c2 = self.values_chk(choice)
+        if 0 < c2 < 5:
+            if c2 == 1:
+                print("로또구매")
+            elif c2 == 2:
+                print("당첨확인")
+            elif c2 == 3:
+                print("회차넘김")
+            else:
+                self.place = Home()
+                self.place.menu()
+
+        else:
+            input("1~4 중 선택하세요 enter ->")
+            return self.menu()
+
+    def values_chk(self, str):
+        while True:
+            try:
+                num = int(str)
+                return num
+            except:
+                str = input("숫자만 입력해주세요: ")
+                return self.values_chk(str)
 
 
 class Bowling(object):
@@ -39,12 +68,12 @@ class Person(object):
             print("{}. {}".format((self.menu.index(i)+1), i), end="\t")
         print("")
         choice = input("입력: ")
-        choice = self.values_chk(choice)
-        if 0 < choice < 4:
-            if choice == 1:
+        c2 = self.values_chk(choice)
+        if 0 < c2 < 4:
+            if c2 == 1:
                 print("집 도착!")
                 self.go_home()
-            elif choice == 2:
+            elif c2 == 2:
                 print("로또사러 왔다.")
                 self.go_lotto()
             else:
