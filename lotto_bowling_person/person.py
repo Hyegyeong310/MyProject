@@ -14,6 +14,7 @@ class Lotto(object):
         self.receipt_m = []
 
     def sub_menu(self):
+        print("로또사러 왔다.")
         for i in self.menu:
             print("{}. {}".format(self.menu.index(i)+1, i), end="\t")
         print("")
@@ -37,7 +38,7 @@ class Lotto(object):
                 print("회차넘김")
                 self.next_lotto()
             else:
-                self.place = Home()
+                self.place = Home(self.money)
                 self.place.sub_menu()
 
         else:
@@ -48,6 +49,10 @@ class Lotto(object):
         if len(self.user_lottos) >= 60:
             input("최대 30만원까지 구매 가능합니다 enter ->")
             self.sub_menu()
+        elif self.min_money():
+            print("남은 돈: {}".format(self.money))
+            input("돈이 부족합니다. enter ->")
+            self.sub_menu()
         else:
             print("몇 장 구매하시겠습니까? (최대 20장 가능)")
             count = input("개수: ")
@@ -56,6 +61,11 @@ class Lotto(object):
                 print("최대 30만원까지 구매 가능합니다.")
                 print("현재 구매 가능한 개수는 {}입니다.".format(60-len(self.user_lottos)))
                 return self.buy_lotto()
+            elif c2*5000 > self.money:
+                print("돈이 부족합니다.")
+                print("남은 돈: {}".format(self.money))
+                input()
+                return self.sub_menu()
             if 0 < c2 < 21:
                 self.chk_kinds(c2)
             else:
@@ -226,6 +236,9 @@ class Lotto(object):
             print("1 또는 2만 입력하세요.")
             return self.next_lotto()
 
+    def min_money(self, min_money=5000):
+        return self.money < min_money
+
     def left_money(self, newMoney, is_win):
         if is_win:
             self.money = self.money + newMoney
@@ -245,61 +258,159 @@ class Lotto(object):
 
 
 class Bowling(object):
-    def __init__(self):
-        pass
-
-    def sub_menu(self):
-        pass
-
-
-class Home(object):
-    def __init__(self):
-        pass
-
-    def sub_menu(self):
-        print("집 도착!")
-
-class Person(object):
-
-    def __init__(self):
-        self.money = 1000000
-        self.menu = ["집으로 간다.", "로또사러 간다.", "볼링치러 간다."]
+    def __init__(self, money):
+        self.money = money
+        self.menu = ["볼링치기", "점수확인", "집으로"]
+        self.rolls = []
+        self.scores = []
         self.place = None
 
-    def main_menu(self):
-        print("무엇을 할까~~")
+    def sub_menu(self):
+        print("볼링치러 왔다.")
         for i in self.menu:
-            print("{}. {}".format((self.menu.index(i)+1), i), end="\t")
-        print("")
+            print("{}. {}".format((self.menu.index(i)+1), i))
         choice = input("입력: ")
         c2 = self.values_chk(choice)
-        if 0 < c2 < 4:
-            if c2 == 1:
-                print("집 도착!")
-                self.go_home()
-            elif c2 == 2:
-                print("로또사러 왔다.")
-                self.go_lotto()
+        if c2 == 1:
+            if self.min_money():
+                print("남은 돈: {}".format(self.money))
+                input("돈이 부족합니다.")
+                return self.sub_menu()
             else:
-                print("볼링치러 왔다.")
-                self.go_bowling()
-
-            self.go()
+                return self.total_score()
+        elif c2 == 2:
+            return self.show_last_score()
+        elif c2 == 3:
+            self.place = Home(self.money)
+            self.place.sub_menu()
         else:
-            input("1~3 사이의 번호를 입력해주세요 enter->")
-            return self.main_menu()
+            print("1~3 사이의 수만 입력하세요.")
+            return self.sub_menu()
 
-    def go(self):
-        self.place.sub_menu()
+    def pin_maker(self):
+        for i in range(10):
+            pins = []
+            for j in range(2):
+                input("굴린다아~~~ enter ->")
+                if j == 0:
+                    pin = random.randint(0, 10)
+                else:
+                    pin = random.randint(0, 10-pins[0])
+                pins.append(pin)
+                print("{}회차 {}번째: {}핀".format((i+1), (j+1), pins[j]))
+            self.rolls.append(pins)
+            self.show_score(False)
 
-    def go_home(self):
-        self.place = Home()
+    def total_score(self):
+        self.pin_maker()
+        score = 0
+        roll_index = 0
 
-    def go_lotto(self):
-        self.place = Lotto(self.money)
+        for frame in range(10):
+            if self.is_strike(roll_index):
+                if frame == 9:
+                    score += 10
+                else:
+                    score += 10 + self.rolls[roll_index+1][0] + self.rolls[roll_index+1][1]
+            elif self.is_spare(roll_index):
+                if frame == 9:
+                    score += 10
+                else:
+                    score += 10 + self.rolls[roll_index+1][0]
+            else:
+                score += self.rolls[roll_index][0] + self.rolls[roll_index][1]
+            roll_index += 1
+            self.scores.append(score)
 
-    def go_bowling(self):
-        self.place = Bowling()
+            if frame == 9:
+                self.show_score(True)
+
+        self.left_money(15000)
+        self.again()
+
+    def show_score(self, is_final):
+
+        for l in range(10):
+            print("="*10, end='\t')
+        print("")
+
+        for m in range(1, 11):
+            print("{:^10}".format(m), end='\t')
+        print("")
+
+        for n in range(10):
+            print("="*10, end='\t')
+        print("")
+
+        for i in self.rolls:
+            if is_final:
+                if i[0] == 10:
+                    i[0] = "X"
+                    i[1] = "-"
+                elif i[1] == (10-i[0]):
+                    i[1] = "/"
+                elif i[0] == 0:
+                    i[0] = "-"
+                elif i[1] == 0:
+                    i[1] = "-"
+            print("{:^3} | {:^3}".format(i[0], i[1]), end='\t')
+        print("")
+
+        for j in self.scores:
+            print("{:^10}".format(j), end='\t')
+        print("")
+
+    def show_last_score(self):
+        if len(self.rolls) == 0:
+            input("확인할 점수가 없습니다. 메인으로 enter ->")
+            self.sub_menu()
+        else:
+            for l in range(10):
+                print("=" * 10, end='\t')
+            print("")
+
+            for m in range(1, 11):
+                print("{:^10}".format(m), end='\t')
+            print("")
+
+            for n in range(10):
+                print("=" * 10, end='\t')
+            print("")
+
+            for i in self.rolls:
+                print("{:^3} | {:^3}".format(i[0], i[1]), end='\t')
+            print("")
+
+            for j in self.scores:
+                print("{:^10}".format(j), end='\t')
+            print("")
+            self.again()
+
+    def is_strike(self, roll_index):
+        return self.rolls[roll_index][0] == 10
+
+    def is_spare(self, roll_index):
+        return self.rolls[roll_index][0] + self.rolls[roll_index][1] == 10
+
+    def again(self):
+        print("1. 메인으로 2. 집으로")
+        choice = input("입력: ")
+        c2 = self.values_chk(choice)
+        if c2 == 1:
+            return self.sub_menu()
+        elif c2 == 2:
+            self.place = Home(self.money)
+            return self.place.sub_menu()
+        else:
+            print("1~2 사이 수만 입력하세요.")
+            return self.again()
+
+    def min_money(self, min_money=15000):
+        return self.money < min_money
+
+    def left_money(self, newMoney):
+        self.money = self.money - newMoney
+        print("남은 돈: {}".format(self.money))
 
     def values_chk(self, str):
         while True:
@@ -311,5 +422,102 @@ class Person(object):
                 return self.values_chk(str)
 
 
-a = Person()
-a.main_menu()
+class Home(object):
+    def __init__(self, money):
+        self.money = money
+        self.menu = ["로또사러 간다.", "볼링치러 간다.", "밖으로 나간다.", "종료"]
+        self.place = None
+
+    def sub_menu(self):
+        print("집 도착!")
+        for i in self.menu:
+            print("{}. {}".format(self.menu.index(i)+1, i))
+        choice = input("입력: ")
+        c2 = self.values_chk(choice)
+        if 0 < c2 < 4:
+            if c2 == 1:
+                self.place = Lotto(self.money)
+            elif c2 == 2:
+                self.place = Bowling(self.money)
+            else:
+                self.place = Person(self.money)
+            self.place.sub_menu()
+
+        elif c2 == 4:
+            print("빠잉~!")
+            pass
+        else:
+            print("1~3 사이의 수만 입력하세요.")
+            return self.sub_menu()
+
+    def values_chk(self, str):
+        while True:
+            try:
+                num = int(str)
+                return num
+            except:
+                str = input("숫자만 입력해주세요: ")
+                return self.values_chk(str)
+
+
+class Person(object):
+    def __init__(self, money):
+        self.money = self.values_chk(money)
+        self.menu = ["집으로 간다.", "로또사러 간다.", "볼링치러 간다."]
+        self.place = None
+
+    def sub_menu(self):
+        print("무엇을 할까~~")
+        for i in self.menu:
+            print("{}. {}".format((self.menu.index(i)+1), i), end="\t")
+        print("")
+        choice = input("입력: ")
+        c2 = self.values_chk(choice)
+        if 0 < c2 < 4:
+            if c2 == 1:
+                self.go_home()
+            elif c2 == 2:
+                if self.min_money(5000):
+                    input("돈 없어. 집에 가자")
+                    self.go_home()
+                else:
+                    self.go_lotto()
+            else:
+                if self.min_money(15000):
+                    input("돈 없어. 집에 가자 enter ->")
+                    self.go_home()
+                else:
+                    self.go_bowling()
+
+            self.go()
+        else:
+            input("1~3 사이의 번호를 입력해주세요 enter->")
+            return self.sub_menu()
+
+    def min_money(self, min_money):
+        return self.money < min_money
+
+    def go(self):
+        self.place.sub_menu()
+
+    def go_home(self):
+        self.place = Home(self.money)
+
+    def go_lotto(self):
+        self.place = Lotto(self.money)
+
+    def go_bowling(self):
+        self.place = Bowling(self.money)
+
+    def values_chk(self, str):
+        while True:
+            try:
+                num = int(str)
+                return num
+            except:
+                str = input("숫자만 입력해주세요: ")
+                return self.values_chk(str)
+
+user_m = input("지금 돈 얼마 있어?\n입력: ")
+a = Person(user_m)
+a.sub_menu()
