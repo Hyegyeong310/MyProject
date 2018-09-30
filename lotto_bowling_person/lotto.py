@@ -1,20 +1,22 @@
 from enum import Enum
 import random
-import home
+import user_home
+import common_func
+
+
+MAX_BUY = 60
+ONE_PRICE = 5000
+INPUT_TEXT = "입력: "
 
 
 class LottoMenu(Enum):
-    로또구매 = 1
-    당첨확인 = 2
-    회차넘김 = 3
-    집으로 = 4
+    Buy_Lotto = 1
+    Check_Win = 2
+    Next_Lotto = 3
+    Homo = 4
 
 
-class Limits(Enum):
-    max_buy = 60
-
-
-class Lotto(object):
+class Lotto:
 
     def __init__(self, money):
         self.money = money
@@ -23,39 +25,40 @@ class Lotto(object):
         self.l_index = 1
         self.win_nums = []
         self.receipt_m = []
+        self.common = common_func.CommonFunc()
 
     def sub_menu(self):
         print("로또사러 왔다.")
         for i in LottoMenu:
             print("{}. {}".format(i.value, i.name), end="\t")
         print("")
-        choice = input("입력: ")
-        c2 = self.values_chk(choice)
-        if c2 == LottoMenu.로또구매.value:
+        choice = input(INPUT_TEXT)
+        c2 = self.common.values_chk(choice)
+        if c2 == LottoMenu.Buy_Lotto.value:
             print("로또구매")
             self.buy_lotto()
-        elif c2 == LottoMenu.당첨확인.value:
+        elif c2 == LottoMenu.Check_Win.value:
             print("="*25)
             print("당첨확인")
             print("="*25)
             if len(self.user_lottos) == 0:
                 input("구매한 로또가 없습니다.\n사러가기 enter ->")
-                return self.buy_lotto()
+                self.buy_lotto()
             else:
                 print("현재 {}장 있습니다.".format(len(self.user_lottos)))
                 self.chk_win()
-        elif c2 == LottoMenu.회차넘김.value:
+        elif c2 == LottoMenu.Next_Lotto.value:
             print("회차넘김")
             self.next_lotto()
-        elif c2 == LottoMenu.집으로.value:
-            self.place = home.Home(self.money)
+        elif c2 == LottoMenu.Homo.value:
+            self.place = user_home.Home(self.money)
             self.place.sub_menu()
         else:
             input("1~4 중 선택하세요 enter ->")
-            return self.sub_menu()
+            self.sub_menu()
 
     def buy_lotto(self):
-        if len(self.user_lottos) >= Limits.max_buy.value:
+        if len(self.user_lottos) >= MAX_BUY:
             input("최대 30만원까지 구매 가능합니다 enter ->")
             self.sub_menu()
         elif self.min_money():
@@ -65,57 +68,57 @@ class Lotto(object):
         else:
             print("몇 장 구매하시겠습니까? (최대 20장 가능)")
             count = input("개수: ")
-            c2 = self.values_chk(count)
-            if len(self.user_lottos) + c2 > Limits.max_buy.value:
+            c2 = self.common.values_chk(count)
+            if len(self.user_lottos) + c2 > MAX_BUY:
                 print("최대 30만원까지 구매 가능합니다.")
-                print("현재 구매 가능한 개수는 {}입니다.".format(int(Limits.max_buy)-len(self.user_lottos)))
-                return self.buy_lotto()
-            elif c2*5000 > self.money:
+                print("현재 구매 가능한 개수는 {}입니다.".format(MAX_BUY-len(self.user_lottos)))
+                self.buy_lotto()
+            elif c2*ONE_PRICE > self.money:
                 print("돈이 부족합니다.")
                 print("남은 돈: {}".format(self.money))
                 input()
-                return self.sub_menu()
+                self.sub_menu()
             if 0 < c2 < 21:
                 self.chk_kinds(c2)
             else:
                 print("최소 1장, 최대 20장이어야 합니다.")
-                return self.buy_lotto()
+                self.buy_lotto()
 
     def chk_kinds(self, num):
         print("1. 자동    2. 수동   3. 뒤로가기")
-        choice = input("입력: ")
-        c2 = self.values_chk(choice)
+        choice = input(INPUT_TEXT)
+        c2 = self.common.values_chk(choice)
         if 0 < c2 < 4:
             if c2 == 1:
                 for i in range(num):
                     self.buy_auto()
                     print("{}번째 {}".format(i+1, self.user_lottos[self.l_index-1]))
-                self.left_money(num * 5000, False)
+                self.left_money(num * ONE_PRICE, False)
                 self.again()
             elif c2 == 2:
                 for i in range(num):
                     self.buy_manual()
                     print("{}번째 {}".format(i+1, self.user_lottos[self.l_index-1]))
-                self.left_money(num * 5000, False)
+                self.left_money(num * ONE_PRICE, False)
                 self.again()
             if c2 == 3:
-                return self.sub_menu()
+                self.sub_menu()
         else:
             print("1~3 사이의 번호를 입력하세요.")
-            return self.chk_kinds(num)
+            self.chk_kinds(num)
 
     def again(self):
         print("계속 구매하시겠습니까? 1. 네    2. 메인으로")
-        choice = input("입력: ")
-        c2 = self.values_chk(choice)
+        choice = input(INPUT_TEXT)
+        c2 = self.common.values_chk(choice)
         if 0 < c2 < 3:
             if c2 == 1:
-                return self.buy_lotto()
+                self.buy_lotto()
             else:
-                return self.sub_menu()
+                self.sub_menu()
         else:
             input("1 또는 2만 입력하세요 enter ->")
-            return self.again()
+            self.again()
 
     def buy_auto(self):
         num = random.sample(range(1, 46), 6)
@@ -129,7 +132,7 @@ class Lotto(object):
             while True:
                 print("{}번째 수 입력: ".format(i))
                 num = input()
-                n2 = self.values_chk(num)
+                n2 = self.common.values_chk(num)
                 if n2 not in range(1, 46):
                     print("1~45 사이의 수만 입력하세요.")
                     continue
@@ -221,46 +224,37 @@ class Lotto(object):
 
     def win_chk_again(self):
         print("다시 확인하시겠습니까? 1. 네    2. 아니오")
-        choice = input("입력: ")
-        c2 = self.values_chk(choice)
+        choice = input(INPUT_TEXT)
+        c2 = self.common.values_chk(choice)
         if c2 == 1:
-            return self.chk_win()
+            self.chk_win()
         elif c2 == 2:
-            return self.sub_menu()
+            self.sub_menu()
         else:
             print("1 또는 2만 입력하세요.")
-            return self.win_chk_again()
+            self.win_chk_again()
 
     def next_lotto(self):
         print("다음 회차로 넘기시겠습니까? 1. 네    2. 아니오")
-        choice = input("입력: ")
-        c2 = self.values_chk(choice)
+        choice = input(INPUT_TEXT)
+        c2 = self.common.values_chk(choice)
         if c2 == 1:
             self.win_nums = []
             self.user_lottos = {}
-            return self.sub_menu()
+            self.sub_menu()
         elif c2 == 2:
-            return self.sub_menu()
+            self.sub_menu()
         else:
             print("1 또는 2만 입력하세요.")
-            return self.next_lotto()
+            self.next_lotto()
 
-    def min_money(self, min_money=5000):
+    def min_money(self, min_money=ONE_PRICE):
         return self.money < min_money
 
-    def left_money(self, newMoney, is_win):
+    def left_money(self, new_money, is_win):
         if is_win:
-            self.money = self.money + newMoney
+            self.money = self.money + new_money
         else:
-            self.money = self.money - newMoney
+            self.money = self.money - new_money
 
         print("남은 돈: {}".format(self.money))
-
-    def values_chk(self, str):
-        while True:
-            try:
-                num = int(str)
-                return num
-            except:
-                str = input("숫자만 입력해주세요: ")
-                return self.values_chk(str)
