@@ -2,14 +2,13 @@
 
 from enum import Enum
 import common_func
-import user_home
+import home
 import lotto
 import bowling
 
 
 LOTTO_MIN = 5000
 BOWLING_MIN = 15000
-
 
 class MainMenu(Enum):
     HOME = 1
@@ -18,10 +17,14 @@ class MainMenu(Enum):
 
 
 class Person:
+
     def __init__(self, money):
         self.common = common_func.CommonFunc()
         self.money = self.common.values_chk(money)
         self.place = None
+        self.LOTTO = lotto.Lotto(self.money, self.HOME)
+        self.BOWLING = bowling.Bowling(self.money, self.HOME)
+        self.HOME = home.Home(self.money, self.LOTTO, self.BOWLING)
 
     def sub_menu(self):
         print("무엇을 할까~~")
@@ -58,7 +61,7 @@ class Person:
         self.place.sub_menu()
 
     def go_home(self):
-        self.place = user_home.Home(self.money)
+        self.place = home.Home(self.money)
 
     def go_lotto(self):
         self.place = lotto.Lotto(self.money)
@@ -67,6 +70,8 @@ class Person:
         self.place = bowling.Bowling(self.money)
 
 
-user_m = input("지금 돈 얼마 있어?\n입력: ")
-a = Person(user_m)
-a.sub_menu()
+if __name__ == "__main__":
+
+    user_money = input("지금 돈 얼마 있어?\n입력: ")
+    person = Person(user_money)
+    person.sub_menu()

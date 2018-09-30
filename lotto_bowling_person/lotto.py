@@ -1,6 +1,5 @@
 from enum import Enum
 import random
-import user_home
 import common_func
 
 
@@ -18,9 +17,9 @@ class LottoMenu(Enum):
 
 class Lotto:
 
-    def __init__(self, money):
+    def __init__(self, money, home):
         self.money = money
-        self.place = None
+        self.home = home
         self.user_lottos = {}
         self.l_index = 1
         self.win_nums = []
@@ -51,8 +50,7 @@ class Lotto:
             print("회차넘김")
             self.next_lotto()
         elif c2 == LottoMenu.Homo.value:
-            self.place = user_home.Home(self.money)
-            self.place.sub_menu()
+            self.home.sub_menu()
         else:
             input("1~4 중 선택하세요 enter ->")
             self.sub_menu()

@@ -1,7 +1,6 @@
 from enum import Enum
 import random
 import common_func
-import user_home
 
 
 TOTAL_FRAME = 10
@@ -16,11 +15,11 @@ class BowlingMenu(Enum):
 
 
 class Bowling:
-    def __init__(self, money):
+    def __init__(self, money, home):
         self.money = money
+        self.home = home
         self.rolls = []
         self.scores = []
-        self.place = None
         self.common = common_func.CommonFunc()
 
     def sub_menu(self):
@@ -39,8 +38,7 @@ class Bowling:
         elif c2 == BowlingMenu.Check_Score.value:
             return self.show_last_score()
         elif c2 == BowlingMenu.Home.value:
-            self.place = user_home.Home(self.money)
-            self.place.sub_menu()
+            self.home.sub_menu()
         else:
             print("1~3 사이의 수만 입력하세요.")
             return self.sub_menu()
@@ -157,8 +155,7 @@ class Bowling:
         if c2 == 1:
             self.sub_menu()
         elif c2 == 2:
-            self.place = user_home.Home(self.money)
-            self.place.sub_menu()
+            self.home.sub_menu()
         else:
             print("1~2 사이 수만 입력하세요.")
             return self.again()
