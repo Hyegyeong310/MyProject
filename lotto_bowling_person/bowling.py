@@ -1,6 +1,6 @@
 from enum import Enum
 import random
-import common_func
+from common_func import CommonFunc
 
 
 TOTAL_FRAME = 10
@@ -9,41 +9,46 @@ FULL_SCORE = 10
 MIN_MONEY = 15000
 
 class BowlingMenu(Enum):
+    """볼링 메뉴 Enum으로 할당"""
     Bowling = 1
     Check_Score = 2
     Home = 3
 
 
 class Bowling:
-    def __init__(self, money, home):
-        self.money = money
-        self.home = home
+    """볼링 클래스 시작"""
+    def __init__(self, person):
+        self.person = person
+        self.money = person.money
+
         self.rolls = []
         self.scores = []
-        self.common = common_func.CommonFunc()
 
     def sub_menu(self):
+        """Bowling class main_menu"""
         print("볼링치러 왔다.")
         for i in BowlingMenu:
             print("{}. {}".format(i.value, i.name))
         choice = input("입력: ")
-        c2 = self.common.values_chk(choice)
+        c2 = CommonFunc.values_chk(choice)
         if c2 == BowlingMenu.Bowling.value:
             if self.min_money():
                 print("남은 돈: {}".format(self.money))
                 input("돈이 부족합니다.")
-                return self.sub_menu()
+                self.sub_menu()
             else:
-                return self.total_score()
+                self.total_score()
         elif c2 == BowlingMenu.Check_Score.value:
-            return self.show_last_score()
+            self.show_last_score()
         elif c2 == BowlingMenu.Home.value:
-            self.home.sub_menu()
+            self.person.go_home()
+            self.person.go()
         else:
             print("1~3 사이의 수만 입력하세요.")
-            return self.sub_menu()
+            self.sub_menu()
 
     def pin_maker(self):
+        """각 프레임별 점수 생성"""
         for i in range(TOTAL_FRAME):
             pins = []
             for j in range(2):
@@ -58,6 +63,11 @@ class Bowling:
             self.show_score(False)
 
     def total_score(self):
+        """점수 계산"""
+        if self.rolls:
+            self.rolls = []
+            self.scores = []
+
         self.pin_maker()
         score = 0
         roll_index = 0
@@ -81,11 +91,13 @@ class Bowling:
             if frame == LAST_FRAME:
                 self.show_score(True)
 
-        self.left_money(MIN_MONEY)
+        self.money = CommonFunc.left_money(self.money, MIN_MONEY, False)
+        print("남은 돈: {}".format(self.money))
         self.again()
 
-    def show_score(self, is_final):
-
+    @staticmethod
+    def show_frame():
+        """스코어 상단표 생성"""
         for l in range(TOTAL_FRAME):
             print("="*10, end='\t')
         print("")
@@ -97,6 +109,10 @@ class Bowling:
         for n in range(TOTAL_FRAME):
             print("="*10, end='\t')
         print("")
+
+    def show_score(self, is_final):
+        """점수 확인"""
+        self.show_frame()
 
         for i in self.rolls:
             if is_final:
@@ -117,22 +133,12 @@ class Bowling:
         print("")
 
     def show_last_score(self):
-        if len(self.rolls) == 0:
+        """최근 스코어 확인"""
+        if not self.rolls:
             input("확인할 점수가 없습니다. 메인으로 enter ->")
             self.sub_menu()
         else:
-            for l in range(TOTAL_FRAME):
-                print("=" * 10, end='\t')
-            print("")
-
-            for m in range(1, 11):
-                print("{:^10}".format(m), end='\t')
-            print("")
-
-            for n in range(TOTAL_FRAME):
-                print("=" * 10, end='\t')
-            print("")
-
+            self.show_frame()
             for i in self.rolls:
                 print("{:^3} | {:^3}".format(i[0], i[1]), end='\t')
             print("")
@@ -143,26 +149,27 @@ class Bowling:
             self.again()
 
     def is_strike(self, roll_index):
+        """스트라이크 체크"""
         return self.rolls[roll_index][0] == FULL_SCORE
 
     def is_spare(self, roll_index):
+        """스페어 체크"""
         return self.rolls[roll_index][0] + self.rolls[roll_index][1] == FULL_SCORE
 
     def again(self):
+        """다시하기 메뉴"""
         print("1. 메인으로 2. 집으로")
         choice = input("입력: ")
-        c2 = self.common.values_chk(choice)
+        c2 = CommonFunc.values_chk(choice)
         if c2 == 1:
             self.sub_menu()
         elif c2 == 2:
-            self.home.sub_menu()
+            self.person.go_home()
+            self.person.go()
         else:
             print("1~2 사이 수만 입력하세요.")
-            return self.again()
+            self.again()
 
     def min_money(self, min_money=MIN_MONEY):
+        """게임 실행시 필요한 최소금액 비교"""
         return self.money < min_money
-
-    def left_money(self, new_money):
-        self.money = self.money - new_money
-        print("남은 돈: {}".format(self.money))

@@ -1,10 +1,10 @@
 # person.py
 
 from enum import Enum
-import common_func
-import home
-import lotto
-import bowling
+from common_func import CommonFunc
+from home import Home
+from lotto import Lotto
+from bowling import Bowling
 
 
 LOTTO_MIN = 5000
@@ -19,12 +19,9 @@ class MainMenu(Enum):
 class Person:
 
     def __init__(self, money):
-        self.common = common_func.CommonFunc()
+        self.common = CommonFunc()
         self.money = self.common.values_chk(money)
         self.place = None
-        self.LOTTO = lotto.Lotto(self.money, self.HOME)
-        self.BOWLING = bowling.Bowling(self.money, self.HOME)
-        self.HOME = home.Home(self.money, self.LOTTO, self.BOWLING)
 
     def sub_menu(self):
         print("무엇을 할까~~")
@@ -58,20 +55,16 @@ class Person:
         return self.money < min_money
 
     def go(self):
-        self.place.sub_menu()
+        if self.place:
+            self.place.sub_menu()
+        else:
+            print("Error!")
 
     def go_home(self):
-        self.place = home.Home(self.money)
+        self.place = Home(self)
 
     def go_lotto(self):
-        self.place = lotto.Lotto(self.money)
+        self.place = Lotto(self)
 
     def go_bowling(self):
-        self.place = bowling.Bowling(self.money)
-
-
-if __name__ == "__main__":
-
-    user_money = input("지금 돈 얼마 있어?\n입력: ")
-    person = Person(user_money)
-    person.sub_menu()
+        self.place = Bowling(self)

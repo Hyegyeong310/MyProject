@@ -1,6 +1,5 @@
 from enum import Enum
-import common_func
-import person
+from common_func import CommonFunc
 
 
 class HomeMenu(Enum):
@@ -11,23 +10,22 @@ class HomeMenu(Enum):
 
 
 class Home:
-    def __init__(self, money, lotto, bowling):
-        self.money = money
-        self.lotto = lotto
-        self.bowling = bowling
-        self.person = person.Person(self.money)
-        self.common = common_func.CommonFunc()
+    def __init__(self, person):
+        self.person = person
 
     def sub_menu(self):
         print("집 도착!")
         for i in HomeMenu:
             print("{}. {}".format(i.value, i.name))
         choice = input("입력: ")
-        c2 = self.common.values_chk(choice)
+        c2 = CommonFunc.values_chk(choice)
+
         if c2 == HomeMenu.Lotto.value:
-            self.lotto.sub_menu()
+            self.person.go_lotto()
+            self.person.go()
         elif c2 == HomeMenu.Bowling.value:
-            self.bowling.sub_menu()
+            self.person.go_bowling()
+            self.person.go()
         elif c2 == HomeMenu.Go_Outside.value:
             self.person.sub_menu()
         elif c2 == HomeMenu.Exit.value:
@@ -35,4 +33,4 @@ class Home:
             pass
         else:
             print("1~4 사이의 수만 입력하세요.")
-            return self.sub_menu()
+            self.sub_menu()
