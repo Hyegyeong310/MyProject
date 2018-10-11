@@ -5,15 +5,18 @@ from common_func import CommonFunc
 from home import Home
 from lotto import Lotto
 from bowling import Bowling
+from baseball import Baseball
 
 
 LOTTO_MIN = 5000
 BOWLING_MIN = 15000
+BASEBALL_MIN = 3000
 
 class MainMenu(Enum):
     HOME = 1
     LOTTO = 2
     BOWLING = 3
+    BASEBALL = 4
 
 
 class Person:
@@ -34,22 +37,24 @@ class Person:
         if c2 == MainMenu.HOME.value:
             self.go_home()
         elif c2 == MainMenu.LOTTO.value:
-            if self.min_money(LOTTO_MIN):
-                input("돈 없어. 집에 가자 enter ->")
-                self.go_home()
-            else:
-                self.go_lotto()
+            self.no_money_go_home(LOTTO_MIN)
+            self.go_lotto()
         elif c2 == MainMenu.BOWLING.value:
-            if self.min_money(BOWLING_MIN):
-                input("돈 없어. 집에 가자 enter ->")
-                self.go_home()
-            else:
-                self.go_bowling()
+            self.no_money_go_home(BOWLING_MIN)
+            self.go_bowling()
+        elif c2 == MainMenu.BASEBALL.value:
+            self.no_money_go_home(BASEBALL_MIN)
+            self.go_baseball()
         else:
-            input("1~3 중 선택하세요 enter ->")
+            input("{}~{} 중 선택하세요 enter ->".format(1, len(MainMenu)))
             return self.sub_menu()
 
         self.go()
+
+    def no_money_go_home(self, min_money):
+        if self.min_money(min_money):
+            input("돈 없어.집에 가자 enter ->")
+            self.go_home()
 
     def min_money(self, min_money):
         return self.money < min_money
@@ -68,3 +73,6 @@ class Person:
 
     def go_bowling(self):
         self.place = Bowling(self)
+
+    def go_baseball(self):
+        self.place = Baseball(self)
