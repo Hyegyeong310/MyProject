@@ -1,82 +1,78 @@
 # person.py
 
-import random
+from enum import Enum
+from common_func import CommonFunc
+from home import Home
+from lotto import Lotto
+from bowling import Bowling
+from baseball import Baseball
 
 
-class Lotto(object):
+LOTTO_MIN = 5000
+BOWLING_MIN = 15000
+BASEBALL_MIN = 3000
+
+class MainMenu(Enum):
+    HOME = 1
+    LOTTO = 2
+    BOWLING = 3
+    BASEBALL = 4
+
+
+class Person:
+
     def __init__(self, money):
-        self.money = money
-
-    def menu(self):
-        pass
-
-
-class Bowling(object):
-    def __init__(self):
-        pass
-
-    def menu(self):
-        pass
-
-
-class Home(object):
-    def __init__(self):
-        pass
-
-    def menu(self):
-        pass
-
-class Person(object):
-
-    def __init__(self):
-        self.money = 1000000
-        self.menu = ["집으로 간다.", "로또사러 간다.", "볼링치러 간다."]
+        self.common = CommonFunc()
+        self.money = self.common.values_chk(money)
         self.place = None
 
-    def main_menu(self):
+    def sub_menu(self):
         print("무엇을 할까~~")
-        for i in self.menu:
-            print("{}. {}".format((self.menu.index(i)+1), i), end="\t")
+        for i in MainMenu:
+            print("{}. {}".format(i.value, i.name), end='\t')
         print("")
-        choice = input("입력: ")
-        choice = self.values_chk(choice)
-        if 0 < choice < 4:
-            if choice == 1:
-                print("집 도착!")
-                self.go_home()
-            elif choice == 2:
-                print("로또사러 왔다.")
-                self.go_lotto()
-            else:
-                print("볼링치러 왔다.")
-                self.go_bowling()
 
-            self.go()
+        choice = input("입력: ")
+        c2 = self.common.values_chk(choice)
+        if c2 == MainMenu.HOME.value:
+            self.go_home()
+        elif c2 == MainMenu.LOTTO.value:
+            self.no_money_go_home(LOTTO_MIN)
+            self.go_lotto()
+        elif c2 == MainMenu.BOWLING.value:
+            self.no_money_go_home(BOWLING_MIN)
+            self.go_bowling()
+        elif c2 == MainMenu.BASEBALL.value:
+            self.no_money_go_home(BASEBALL_MIN)
+            self.go_baseball()
         else:
-            input("1~3 사이의 번호를 입력해주세요 enter->")
-            return self.main_menu()
+            input("{}~{} 중 선택하세요 enter ->".format(1, len(MainMenu)))
+            return self.sub_menu()
+
+        self.go()
+
+    def no_money_go_home(self, min_money):
+        if self.min_money(min_money):
+            input("돈 없어.집에 가자 enter ->")
+            self.go_home()
+
+    def min_money(self, min_money):
+        return self.money < min_money
 
     def go(self):
-        self.place.menu()
+        if self.place:
+            self.place.sub_menu()
+        else:
+            print("Error!")
 
     def go_home(self):
-        self.place = Home()
+        self.place = Home(self)
 
     def go_lotto(self):
-        self.place = Lotto(self.money)
+        self.place = Lotto(self)
 
     def go_bowling(self):
-        self.place = Bowling()
+        self.place = Bowling(self)
 
-    def values_chk(self, str):
-        while True:
-            try:
-                num = int(str)
-                return num
-            except:
-                str = input("숫자만 입력해주세요: ")
-                return self.values_chk(str)
-
-
-a = Person()
-a.main_menu()
+    def go_baseball(self):
+        self.place = Baseball(self)
