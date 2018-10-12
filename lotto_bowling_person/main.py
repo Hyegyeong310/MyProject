@@ -1,9 +1,10 @@
+"""person.py main 파일"""
 from common_func import CommonFunc
 from person import Person
 
 if __name__ == "__main__":
-    user_money = input("지금 돈 얼마 있어?\n입력: ")
-    user_money = CommonFunc.values_chk(user_money)
+    USER_MONEY = input("지금 돈 얼마 있어?\n입력: ")
+    USER_MONEY = CommonFunc.values_chk(USER_MONEY)
 
-    person = Person(user_money)
-    person.sub_menu()
+    PERSON = Person(USER_MONEY)
+    PERSON.sub_menu()
